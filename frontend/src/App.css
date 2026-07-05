@@ -1,0 +1,425 @@
+/* -----------------------------------------------------------------------
+   Global reset & base
+----------------------------------------------------------------------- */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: system-ui, -apple-system, sans-serif;
+  background: #0f1117;
+  color: #e8eaf0;
+  min-height: 100vh;
+  line-height: 1.5;
+}
+
+/* -----------------------------------------------------------------------
+   App layout
+----------------------------------------------------------------------- */
+.app {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem;
+}
+
+.app-header {
+  margin-bottom: 2rem;
+  border-bottom: 1px solid #2a2d3a;
+  padding-bottom: 1rem;
+}
+
+.app-header h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.app-subtitle {
+  color: #8b8fa8;
+  margin-top: 0.25rem;
+  font-size: 0.95rem;
+  max-width: 600px;
+}
+
+.app-main {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* -----------------------------------------------------------------------
+   Controls
+----------------------------------------------------------------------- */
+/* -----------------------------------------------------------------------
+   Controls
+----------------------------------------------------------------------- */
+.controls {
+  background: #161921;
+  border: 1px solid #2a2d3a;
+  border-radius: 8px;
+  padding: 1.25rem;
+  display: grid;
+  grid-template-columns: auto auto 1fr;
+  gap: 0 1.5rem;
+  align-items: end;
+}
+
+/* Stack each column's label on top of its input */
+.control-row {
+  display: contents; /* participates in parent grid, not its own box */
+}
+
+/* Row 1: labels */
+.control-label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #8b8fa8;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  grid-row: 1;
+  padding-bottom: 0.4rem;
+  white-space: nowrap;
+  align-self: end;
+}
+
+/* Row 2: inputs / button wrapper */
+select,
+.file-input-wrapper,
+.controls > div:last-child {
+  grid-row: 2;
+}
+
+select {
+  background: #0f1117;
+  border: 1px solid #2a2d3a;
+  border-radius: 4px;
+  color: #e8eaf0;
+  padding: 0 0.75rem;
+  font-size: 0.95rem;
+  cursor: pointer;
+  height: 38px;
+  min-width: 180px;
+  box-sizing: border-box;
+}
+
+select:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+select:focus {
+  outline: 2px solid #4a6cf7;
+  outline-offset: 2px;
+}
+
+/* On small screens fall back to vertical stack */
+@media (max-width: 540px) {
+  .controls {
+    grid-template-columns: 1fr;
+  }
+
+  .control-row {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+
+  .control-label {
+    grid-row: unset;
+    padding-bottom: 0;
+  }
+
+  .control-row select,
+  .control-row .file-input-wrapper,
+  .control-row--action {
+    grid-row: unset;
+  }
+
+  .control-row--action {
+    justify-content: flex-start;
+  }
+}
+
+/* -----------------------------------------------------------------------
+   Disclaimer
+----------------------------------------------------------------------- */
+.disclaimer {
+  font-size: 0.8rem;
+  color: #4a4d5e;
+  text-align: center;
+}
+
+/* -----------------------------------------------------------------------
+   File mode badge (image / video indicator next to label)
+----------------------------------------------------------------------- */
+.file-mode-badge {
+  display: inline-block;
+  margin-left: 0.4rem;
+  padding: 0.1rem 0.4rem;
+  border-radius: 3px;
+  background: #2a2d3a;
+  color: #8b8fa8;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  vertical-align: middle;
+}
+
+/* -----------------------------------------------------------------------
+   Custom file input
+----------------------------------------------------------------------- */
+.file-input-wrapper {
+  position: relative;
+}
+
+.file-input-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+}
+
+.file-input-label {
+  display: flex;
+  align-items: center;
+  background: #0f1117;
+  border: 1px solid #2a2d3a;
+  border-radius: 4px;
+  color: #e8eaf0;
+  padding: 0 0.75rem;
+  font-size: 0.95rem;
+  cursor: pointer;
+  height: 38px;
+  min-width: 200px;
+  max-width: 280px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  box-sizing: border-box;
+  transition: border-color 0.15s;
+}
+
+.file-input-label:not(.disabled):hover {
+  border-color: #4a6cf7;
+}
+
+.file-input-label.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.file-input-hidden:focus + .file-input-label,
+.file-input-label:focus-within {
+  outline: 2px solid #4a6cf7;
+  outline-offset: 2px;
+}
+
+/* -----------------------------------------------------------------------
+   Buttons
+----------------------------------------------------------------------- */
+.btn {
+  padding: 0.55rem 1.25rem;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s, transform 0.1s;
+  white-space: nowrap;
+}
+
+.btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.btn:not(:disabled):active {
+  transform: scale(0.97);
+}
+
+.btn-primary {
+  background: #4a6cf7;
+  color: #ffffff;
+}
+
+.btn-primary:not(:disabled):hover {
+  background: #5a7cf9;
+}
+
+.btn-danger {
+  background: #c0392b;
+  color: #ffffff;
+}
+
+.btn-danger:not(:disabled):hover {
+  background: #e74c3c;
+}
+
+.btn-ghost {
+  background: transparent;
+  color: #e74c3c;
+  border: 1px solid #c0392b;
+  padding: 0.35rem 0.85rem;
+  font-size: 0.85rem;
+}
+
+.btn-ghost:hover {
+  background: rgba(192, 57, 43, 0.15);
+}
+
+/* -----------------------------------------------------------------------
+   Progress bar
+----------------------------------------------------------------------- */
+.progress-bar {
+  position: relative;
+  height: 28px;
+  background: #161921;
+  border: 1px solid #2a2d3a;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  background: #4a6cf7;
+  transition: width 0.15s linear;
+}
+
+/* Indeterminate shimmer animation for the upload/loading phase */
+.progress-bar--indeterminate .progress-fill {
+  width: 40% !important;
+  animation: indeterminate-slide 1.4s ease-in-out infinite;
+}
+
+@keyframes indeterminate-slide {
+  0%   { left: -40%; }
+  100% { left: 100%; }
+}
+
+.progress-label {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #ffffff;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.7);
+  pointer-events: none;
+}
+
+/* -----------------------------------------------------------------------
+   Error banner
+----------------------------------------------------------------------- */
+.error-banner {
+  background: #3b1a1a;
+  border: 1px solid #c0392b;
+  border-radius: 6px;
+  padding: 0.75rem 1rem;
+  color: #e74c3c;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+/* -----------------------------------------------------------------------
+   Display grid (side-by-side panels)
+----------------------------------------------------------------------- */
+.display-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+@media (max-width: 640px) {
+  .display-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.display-panel {
+  background: #161921;
+  border: 1px solid #2a2d3a;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.panel-title {
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #8b8fa8;
+  padding: 0.6rem 1rem;
+  border-bottom: 1px solid #2a2d3a;
+}
+
+.display-media {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: contain;
+  background: #0a0c10;
+  display: block;
+}
+
+.display-placeholder {
+  aspect-ratio: 16 / 9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #4a4d5e;
+  font-size: 0.9rem;
+  text-align: center;
+  padding: 1rem;
+}
+
+/* -----------------------------------------------------------------------
+   Spinner
+----------------------------------------------------------------------- */
+.spinner {
+  display: inline-block;
+  width: 36px;
+  height: 36px;
+  border: 3px solid #2a2d3a;
+  border-top-color: #4a6cf7;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* -----------------------------------------------------------------------
+   Processor info card
+----------------------------------------------------------------------- */
+.processor-info {
+  background: #161921;
+  border: 1px solid #2a2d3a;
+  border-radius: 8px;
+  padding: 1rem 1.25rem;
+}
+
+.processor-info h3 {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 0.4rem;
+  color: #ffffff;
+}
+
+.processor-info p {
+  color: #8b8fa8;
+  font-size: 0.9rem;
+}

@@ -1,0 +1,32 @@
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      - ALLOWED_ORIGINS=http://localhost:5173
+    volumes:
+      # Hot-reload: mount source so code changes reflect without rebuilding
+      - ./backend/app:/app/app
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      target: dev   # Uses the dev stage (Vite dev server, not nginx)
+    ports:
+      - "5173:5173"
+    environment:
+      # Internal Docker network URL used by the Vite proxy (server-side, not browser)
+      - VITE_BACKEND_INTERNAL_URL=http://backend:8000
+    volumes:
+      # Hot-reload: mount source, but exclude node_modules
+      - ./frontend/src:/app/src
+      - ./frontend/index.html:/app/index.html
+      - ./frontend/vite.config.ts:/app/vite.config.ts
+    depends_on:
+      - backend
+    restart: unless-stopped

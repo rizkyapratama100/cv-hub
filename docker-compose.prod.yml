@@ -1,0 +1,23 @@
+# Production compose — runs on AWS Lightsail
+# Frontend is hosted on Cloudflare Pages (not here)
+# Usage: docker compose -f docker-compose.prod.yml up -d
+
+services:
+  backend:
+    image: cvshowcase-backend:latest
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "80:8000"
+    environment:
+      # Set to your Cloudflare Pages domain once deployed
+      - ALLOWED_ORIGINS=${ALLOWED_ORIGINS}
+    restart: unless-stopped
+    mem_limit: 400m       # Safety cap — leaves ~100MB headroom on 512MB instance
+    memswap_limit: 900m   # Allow swap to absorb spikes
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
