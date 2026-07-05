@@ -91,7 +91,85 @@ curl http://localhost/processors
 
 ---
 
-## Part 2 — Cloudflare Pages (Frontend)
+## Part 1.6 — Cloudflare Tunnel (Required for HTTPS)
+
+Cloudflare Pages serves over HTTPS. Browsers block HTTP requests from HTTPS pages
+(mixed content policy). You need HTTPS on the backend.
+
+The free solution is a **Cloudflare Tunnel** — it gives your backend a public
+`https://*.trycloudflare.com` URL with no domain or certificate needed.
+
+SSH into your Lightsail instance and run:
+
+```bash
+# 1. Install cloudflared
+curl -L https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64.deb -o cloudflared.deb
+sudo dpkg -i cloudflared.deb
+
+# 2. Start a persistent tunnel pointing at your local backend on port 80
+# This prints a https://*.trycloudflare.com URL — copy it
+cloudflared tunnel --url http://localhost:80 --no-autoupdate &
+
+# The URL printed looks like: https://something-random.trycloudflare.com
+# Copy that URL
+```
+
+> **Note:** The free `trycloudflare.com` URL changes every time cloudflared restarts.
+> For a stable URL, see Part 1.7 (named tunnel with a free Cloudflare account).
+
+Once you have the tunnel URL:
+1. Go back to Cloudflare Pages → your project → **Settings → Environment Variables**
+2. Update `VITE_API_URL` to the tunnel URL, e.g. `https://something-random.trycloudflare.com`
+3. Update `ALLOWED_ORIGINS` on the Lightsail instance to your Pages URL, restart container
+4. Retrigger a Pages deployment
+
+---
+
+## Part 1.7 — Named Tunnel (Stable URL, Recommended)
+
+A named tunnel gives you a permanent `https://backend.yourdomain.com` URL.
+Requires a domain added to Cloudflare (free plan works).
+
+```bash
+# On the Lightsail instance:
+
+# 1. Authenticate cloudflared with your Cloudflare account
+cloudflared tunnel login
+# → Opens a browser URL — open it on your machine and authorize
+
+# 2. Create a named tunnel
+cloudflared tunnel create cv-showcase-backend
+
+# 3. Note the tunnel ID printed (looks like: a1b2c3d4-...)
+TUNNEL_ID="YOUR_TUNNEL_ID_HERE"
+
+# 4. Create tunnel config
+mkdir -p ~/.cloudflared
+cat > ~/.cloudflared/config.yml << EOF
+tunnel: $TUNNEL_ID
+credentials-file: /home/ubuntu/.cloudflared/$TUNNEL_ID.json
+
+ingress:
+  - hostname: backend.yourdomain.com
+    service: http://localhost:80
+  - service: http_status:404
+EOF
+
+# 5. Add DNS record (creates backend.yourdomain.com → tunnel)
+cloudflared tunnel route dns cv-showcase-backend backend.yourdomain.com
+
+# 6. Install as a system service (auto-starts on reboot)
+sudo cloudflared service install
+sudo systemctl start cloudflared
+sudo systemctl enable cloudflared
+```
+
+Then:
+1. Set `VITE_API_URL=https://backend.yourdomain.com` in Cloudflare Pages env vars
+2. Set `ALLOWED_ORIGINS=https://your-pages-project.pages.dev` on Lightsail
+3. Redeploy Pages
+
+
 
 ### 2.1 Create the Pages project
 

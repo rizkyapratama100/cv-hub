@@ -52,9 +52,6 @@ body {
 /* -----------------------------------------------------------------------
    Controls
 ----------------------------------------------------------------------- */
-/* -----------------------------------------------------------------------
-   Controls
------------------------------------------------------------------------ */
 .controls {
   background: #161921;
   border: 1px solid #2a2d3a;
@@ -68,7 +65,7 @@ body {
 
 /* Stack each column's label on top of its input */
 .control-row {
-  display: contents; /* participates in parent grid, not its own box */
+  display: contents;
 }
 
 /* Row 1: labels */
@@ -100,7 +97,8 @@ select {
   font-size: 0.95rem;
   cursor: pointer;
   height: 38px;
-  min-width: 180px;
+  width: 100%;
+  min-width: 0;
   box-sizing: border-box;
 }
 
@@ -114,31 +112,32 @@ select:focus {
   outline-offset: 2px;
 }
 
-/* On small screens fall back to vertical stack */
-@media (max-width: 540px) {
+/* Mobile: collapse to a single-column vertical stack */
+@media (max-width: 600px) {
   .controls {
     grid-template-columns: 1fr;
+    gap: 1rem 0;
   }
 
-  .control-row {
-    display: flex;
-    flex-direction: column;
-    gap: 0.4rem;
-  }
-
+  /* Each label goes back to its own row above its input */
   .control-label {
     grid-row: unset;
-    padding-bottom: 0;
+    padding-bottom: 0.25rem;
   }
 
-  .control-row select,
-  .control-row .file-input-wrapper,
-  .control-row--action {
+  select,
+  .file-input-wrapper,
+  .controls > div:last-child {
     grid-row: unset;
   }
 
-  .control-row--action {
-    justify-content: flex-start;
+  /* Button full-width on mobile */
+  .controls > div:last-child {
+    justify-content: stretch;
+  }
+
+  .controls > div:last-child .btn {
+    width: 100%;
   }
 }
 
@@ -196,7 +195,8 @@ select:focus {
   font-size: 0.95rem;
   cursor: pointer;
   height: 38px;
-  min-width: 200px;
+  width: 100%;
+  min-width: 0;
   max-width: 280px;
   overflow: hidden;
   text-overflow: ellipsis;
