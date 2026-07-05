@@ -115,29 +115,40 @@ select:focus {
 /* Mobile: collapse to a single-column vertical stack */
 @media (max-width: 600px) {
   .controls {
-    grid-template-columns: 1fr;
-    gap: 1rem 0;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto auto auto;
+    gap: 0.75rem 1rem;
   }
 
-  /* Each label goes back to its own row above its input */
-  .control-label {
-    grid-row: unset;
-    padding-bottom: 0.25rem;
-  }
+  /* Label row: each label above its own input */
+  .controls > label:nth-of-type(1) { grid-column: 1; grid-row: 1; padding-bottom: 0; }
+  .controls > label:nth-of-type(2) { grid-column: 2; grid-row: 1; padding-bottom: 0; }
+  .controls > div[aria-hidden]      { display: none; }
 
-  select,
-  .file-input-wrapper,
+  /* Input row */
+  .controls > select                { grid-column: 1; grid-row: 2; }
+  .controls > .file-input-wrapper   { grid-column: 2; grid-row: 2; }
+
+  /* Button: full width below */
   .controls > div:last-child {
-    grid-row: unset;
-  }
-
-  /* Button full-width on mobile */
-  .controls > div:last-child {
+    grid-column: 1 / -1;
+    grid-row: 3;
     justify-content: stretch;
   }
 
   .controls > div:last-child .btn {
     width: 100%;
+  }
+
+  .control-label {
+    grid-row: unset;
+    padding-bottom: 0;
+    white-space: normal;
+  }
+
+  select,
+  .file-input-wrapper {
+    grid-row: unset;
   }
 }
 
