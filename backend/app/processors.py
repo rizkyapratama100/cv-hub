@@ -10,6 +10,8 @@ from typing import Callable
 import cv2
 import numpy as np
 
+from .cv_projects.blueprintifier import process_frame as blueprintifier_fn
+
 
 # ---------------------------------------------------------------------------
 # Placeholder processors (simple OpenCV operations)
@@ -55,6 +57,7 @@ PROCESSORS: dict[str, Callable[[np.ndarray], np.ndarray]] = {
     "edge_detection": edge_detection,
     "blur": blur,
     "threshold": threshold,
+    "blueprintifier": blueprintifier_fn,
 }
 
 # Human-readable metadata for the frontend dropdown
@@ -66,22 +69,27 @@ PROCESSOR_META: list[dict] = [
     },
     {
         "id": "grayscale",
-        "label": "Grayscale",
+        "label": "Grayscale (Placeholder)",
         "description": "Converts the video to grayscale using OpenCV's BGR→GRAY conversion.",
     },
     {
         "id": "edge_detection",
-        "label": "Edge Detection",
+        "label": "Edge Detection (Placeholder)",
         "description": "Applies Canny edge detection to highlight object boundaries.",
     },
     {
         "id": "blur",
-        "label": "Gaussian Blur",
+        "label": "Gaussian Blur (Placeholder)",
         "description": "Applies a Gaussian blur to smooth out the image.",
     },
     {
         "id": "threshold",
-        "label": "Threshold",
+        "label": "Threshold (Placeholder)",
         "description": "Applies binary thresholding to produce a black-and-white mask.",
+    },
+    {
+        "id": "blueprintifier",
+        "label": "Blueprintifier",
+        "description": "Renders the image as a technical blueprint — dark background with a drafting grid and white edge overlays.",
     },
 ]

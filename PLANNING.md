@@ -1,5 +1,4 @@
-kiro-cli --resume-id 3d1ba314-8b81-401a-92b9-9b3079784b38
-
+Resume with: kiro-cli --resume-id 3d1ba314-8b81-401a-92b9-9b3079784b38
 # CV Showcase - Planning Document
 
 This project is intended to be used as a sort of "hub" to showcase my past and future Computer Vision (CV) projects (at least ones that are focused on the CV part itself rather than parts built off of it) such that recruiters and people curious of my work can access and observe my work.
